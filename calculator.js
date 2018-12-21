@@ -10,7 +10,6 @@ var resultsDisplay = document.querySelector("#result");
 var firstValue = 0;
 //create array to hold every clicked number
 var first = [];
-var trackFirst = [];
 //create placeholder and initialize to zero for second value
 var secondValue = 0;
 //create variable to store the results of operations
@@ -43,8 +42,6 @@ dotBtn.onclick = function(){
         console.log(first);
     }
 }
-//add click listener to equals button 
-equalsBtn.onclick = equals;
 
 //create add button variable
 var addBtn = document.querySelector("#add");
@@ -66,57 +63,75 @@ divideBtn.addEventListener("click", calculate);
 
 //create function to handle swapping of values
 function swapValues(){
-    //set x to the value of the "firstNum" variable for addition
+    //if result is zero i.e the at the beginning of operation, swap the secondValue into the firstValue
     if(result === 0){
        firstValue = secondValue; 
-    } else {
+    } else if(secondValue !== 0){//if secondValue has a value in it not zero, also swap the secondValue into the firstValue
+        firstValue = secondValue;
+        //once a new value for operation is clicked set result to zero
+        result = 0;
+        //set result screen to display zero
+        setResultScreenToZero();
+    } else {//but if secondValue is zero and result has a value i.e after the result is gotten an operator is click to continue operation with the resulting value
         firstValue = result;
+        //then set result to zero
         result = 0;
     }    
 }
-// create function to calculate values
-function calculate(){
+
+//create function to add operators to screen
+function addOperatorToScreen(){
     //see line 7 for declaration of display variable 
-        //add operation sign to display
+        //add operator to display
     if(result === 0 && display.innerText === ""){
         display.innerText = "";
     } else if((display.innerText).search(/(\+|-|×|÷)/g) >= 0){
         display.innerText;
     } else {
         display.innerText += this.textContent;
-        swapValues();
     }
+}
 
-    //add the firstvalue to screen if the operation sign is the first button to be clicked;
+//create function to reset result screen to zero
+function setResultScreenToZero(){
+    resultsDisplay.innerText = "0";
+}
+
+// create function to calculate values
+function calculate(){
+    //add operators to screen
+    addOperatorToScreen.call(this);
+    //swap values after adding operator to screen
+    swapValues();
+    //add the firstvalue to screen if the operator is the first button to be clicked;
     if ((display.innerText).indexOf("+") === 0){
         display.innerText = firstValue + "+";
         //reset the result display to zero when the resulting value has been displayed
-        resultsDisplay.innerText = "0";
+        setResultScreenToZero();
     }
     else if((display.innerText).indexOf("-") === 0){
         display.innerText = firstValue + "-";
         //reset the result display to zero when the resulting value has been displayed
-        resultsDisplay.innerText = "0";
+        setResultScreenToZero();
     } 
     else if((display.innerText).indexOf("×") === 0){
         display.innerText = firstValue + "×";
         //reset the result display to zero when the resulting value has been displayed
-        resultsDisplay.innerText = "0";
+        setResultScreenToZero();
     } 
     else if((display.innerText).indexOf("÷") === 0){
         display.innerText = firstValue + "÷";
         //reset the result display to zero when the resulting value has been displayed
-        resultsDisplay.innerText = "0";
+        setResultScreenToZero();
     }
     //reset "first" array to be empty so we can hold second set of values for operation
     first = [];
+    //reset secondValue to be zero so we can hold second value
     secondValue = 0;
-    //run equals operation if an operator has been clicked
-    // equals();
 }
 
-//create function to equals operation
-function equals(){
+//add click listener to equals button 
+equalsBtn.onclick = function(){
     if((display.innerText).indexOf("+") >= 1){
         result = firstValue + secondValue;   
     } 
@@ -131,14 +146,12 @@ function equals(){
     }   
     //set result display to the result of operations
     resultsDisplay.innerText = result;
-    //set main display to empty
+    //set main display to be empty
     display.innerText = "";
     //set value placeholders to zero
     firstValue = 0, secondValue = 0;
-    //reset "first" array to be empty so we can hold second set of values for operation
-    // trackFirst = first;
+    //reset "first" array to be empty so we can hold new set of values for operation
     first = [];
-    console.log(trackFirst);
 }
 
 //create cancel button variable
